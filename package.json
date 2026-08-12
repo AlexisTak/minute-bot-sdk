@@ -1,5 +1,5 @@
 {
-  "name": "@minute-bot/sdk",
+  "name": "@la_minute_code/sdk",
   "version": "0.1.0",
   "description": "SDK public pour écrire des plugins Minute Bot.",
   "license": "MIT",

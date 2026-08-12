@@ -1,4 +1,4 @@
-# @minute-bot/sdk
+# @la_minute_code/sdk
 
 Le contrat public pour écrire un plugin [Minute Bot](https://github.com/AlexisTak/minute_bot) :
 la classe `Plugin`, le `PluginContext` transmis à ses hooks, et le schéma du manifeste
@@ -7,7 +7,7 @@ la classe `Plugin`, le `PluginContext` transmis à ses hooks, et le schéma du m
 ## Installation
 
 ```bash
-npm install @minute-bot/sdk discord.js
+npm install @la_minute_code/sdk discord.js
 ```
 
 `discord.js` est une dépendance paire (`peerDependency`) — installez-la vous-même, ce SDK ne
@@ -16,7 +16,7 @@ choisit pas la version à votre place.
 ## Écrire un plugin
 
 ```typescript
-import { Plugin, type PluginContext } from '@minute-bot/sdk';
+import { Plugin, type PluginContext } from '@la_minute_code/sdk';
 
 export default class HelloPlugin extends Plugin {
   readonly name = 'hello-plugin';
