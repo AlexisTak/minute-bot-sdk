@@ -9,7 +9,7 @@ import type {
   PluginConfig,
   RouteApi,
   TaskApi,
-} from './types';
+} from './types.js';
 
 export interface PluginContext {
   /** Name of the plugin owning this context. */

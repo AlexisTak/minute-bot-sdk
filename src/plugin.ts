@@ -1,4 +1,4 @@
-import type { PluginContext } from './context';
+import type { PluginContext } from './context.js';
 
 export abstract class Plugin {
   /** Must match the `name` field of plugin.json. */
