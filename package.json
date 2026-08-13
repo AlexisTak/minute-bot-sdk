@@ -4,6 +4,7 @@
   "description": "SDK public pour écrire des plugins Minute Bot.",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@11.3.0",
   "engines": {
     "node": ">=24"
   },
@@ -24,7 +25,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "zod": "^3.25.76"
