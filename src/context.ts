@@ -26,7 +26,7 @@ export interface PluginContext {
   readonly events: EventApi;
   /** Permission `tasks`. */
   readonly tasks: TaskApi;
-  /** Permission `discord`. */
+  /** Permissions `discord:read` / `discord:send` / `discord:roles` / `discord:moderate`, per namespace. */
   readonly discord: DiscordApi;
   /** Permission `network`. */
   readonly http: HttpApi;

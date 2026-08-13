@@ -49,13 +49,22 @@ Transmis à `onEnable` (et `onLoad`, s'il est défini) :
 | `commands` | permission `commands` | Enregistrer des commandes slash |
 | `events` | permission `events` | S'abonner aux événements du bot |
 | `tasks` | permission `tasks` | Planifier des tâches récurrentes |
-| `discord` | permission `discord` | Envoyer des messages, gérer des rôles, modérer |
+| `discord.read` | permission `discord:read` | Lire guildes, membres, salons |
+| `discord.send` | permission `discord:send` | Envoyer des messages et des embeds |
+| `discord.roles` | permission `discord:roles` | Ajouter/retirer des rôles |
+| `discord.moderate` | permission `discord:moderate` | Expulser, bannir |
 | `http` | permission `network` | Client HTTP avec timeout |
 | `routes` | permission `http-server` | Déclaré, pas encore implémenté côté bot |
 | `database` | permission `database` | Déclaré, pas encore implémenté côté bot |
 
 Chaque membre soumis à permission n'est exposé que si le manifeste du plugin déclare la
 permission correspondante — y accéder sans l'avoir déclarée est une erreur au runtime, côté bot.
+Les quatre espaces de noms de `discord` sont gouvernés séparément : demander `discord:send`
+n'ouvre aucun droit de modération.
+
+Le champ `main` du manifeste doit rester un chemin **relatif** au dossier du plugin, pointant
+vers un fichier `.js`/`.ts` : les chemins absolus, les remontées `..` et les URLs sont rejetés à
+la validation.
 
 ## Cycle de vie
 
