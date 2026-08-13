@@ -48,4 +48,76 @@ describe('parseManifest', () => {
   test('rejects a non-object input', () => {
     expect(parseManifest('nope').ok).toBe(false);
   });
+
+  test('rejects an unknown top-level key', () => {
+    const result = parseManifest({ ...valid, permision: ['discord:send'] });
+    expect(result.ok).toBe(false);
+  });
+
+  test('deduplicates permissions', () => {
+    const result = parseManifest({
+      ...valid,
+      permissions: ['commands', 'commands', 'events'],
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.manifest.permissions).toEqual(['commands', 'events']);
+  });
+
+  test('rejects an oversized permission list', () => {
+    const result = parseManifest({
+      ...valid,
+      permissions: Array.from({ length: 10_000 }, () => 'commands'),
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  test.each([
+    ['a parent-directory escape', '../../../../etc/passwd'],
+    ['a nested parent-directory escape', 'src/../../secrets.js'],
+    ['a posix absolute path', '/home/bot/.env.js'],
+    ['a windows absolute path', 'C:/Users/bot/.ssh/id_rsa.js'],
+    ['a backslash path', '..\\..\\evil.js'],
+    ['a remote url', 'https://evil.tld/payload.js'],
+    ['a data url', 'data:text/javascript,console.log(1)'],
+    ['a null byte', 'index.js\u0000.txt'],
+    ['a non-script extension', 'README.md'],
+  ])('rejects a main entrypoint with %s', (_label, main) => {
+    const result = parseManifest({ ...valid, main });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('main');
+  });
+
+  test('accepts a relative main entrypoint', () => {
+    expect(parseManifest({ ...valid, main: 'dist/index.js' }).ok).toBe(true);
+  });
+
+  test.each([
+    ['name', 'a'.repeat(65)],
+    ['author', 'a'.repeat(129)],
+    ['description', 'a'.repeat(513)],
+  ])('rejects an oversized %s', (field, value) => {
+    expect(parseManifest({ ...valid, [field]: value }).ok).toBe(false);
+  });
+
+  test('rejects a reserved name', () => {
+    const result = parseManifest({ ...valid, name: 'core' });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('reserved');
+  });
+
+  test('accepts a semver prerelease', () => {
+    expect(parseManifest({ ...valid, version: '1.0.0-beta.1' }).ok).toBe(true);
+  });
+
+  test('returns a single-line, bounded error message', () => {
+    const result = parseManifest({ ...valid, author: `evil\n[ERROR] forged log line` });
+    // author is a valid string here, so force a failure on another field too
+    const injected = parseManifest({ ...valid, apiVersion: '2.0', author: 'x\ny' });
+    expect(result.ok).toBe(true);
+    expect(injected.ok).toBe(false);
+    if (!injected.ok) {
+      expect(injected.error).not.toMatch(/[\r\n]/);
+      expect(injected.error.length).toBeLessThanOrEqual(500);
+    }
+  });
 });

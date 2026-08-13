@@ -1,4 +1,5 @@
 import type {
+  Channel,
   ChatInputCommandInteraction,
   EmbedBuilder,
   Guild,
@@ -67,17 +68,42 @@ export interface TaskApi {
   register(definition: TaskDefinition): Disposable;
 }
 
-export interface DiscordApi {
+/** Permission `discord:read`. */
+export interface DiscordReadApi {
+  fetchGuild(guildId: string): Promise<Guild>;
+  fetchMember(guildId: string, userId: string): Promise<GuildMember>;
+  fetchChannel(channelId: string): Promise<Channel>;
+}
+
+/** Permission `discord:send`. */
+export interface DiscordSendApi {
   sendMessage(channelId: string, content: string): Promise<void>;
   createEmbed(init: { title?: string; description?: string; color?: number }): EmbedBuilder;
-  manageRole(
-    guildId: string,
-    userId: string,
-    roleId: string,
-    action: 'add' | 'remove',
-  ): Promise<void>;
+}
+
+/** Permission `discord:roles`. */
+export interface DiscordRoleApi {
+  addRole(guildId: string, userId: string, roleId: string, reason?: string): Promise<void>;
+  removeRole(guildId: string, userId: string, roleId: string, reason?: string): Promise<void>;
+}
+
+/** Permission `discord:moderate`. */
+export interface DiscordModerationApi {
   kickMember(guildId: string, userId: string, reason?: string): Promise<void>;
   banMember(guildId: string, userId: string, reason?: string): Promise<void>;
+}
+
+/**
+ * Each namespace is built by the loader only if the matching permission is
+ * declared; the others are absent at runtime. Reading a namespace the plugin
+ * did not declare throws, exactly like the permissioned members of
+ * PluginContext.
+ */
+export interface DiscordApi {
+  readonly read: DiscordReadApi;
+  readonly send: DiscordSendApi;
+  readonly roles: DiscordRoleApi;
+  readonly moderate: DiscordModerationApi;
 }
 
 export interface HttpApi {
