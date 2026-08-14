@@ -1,0 +1,6 @@
+# Shell scripts must keep LF endings even on a Windows checkout: a `#!/bin/sh`
+# line ending in CRLF makes the interpreter lookup fail, and the hook would
+# silently stop running — the one failure mode a verification hook must not
+# have.
+.githooks/** text eol=lf
+*.sh text eol=lf

@@ -72,6 +72,24 @@ la validation.
 événements) → ... → `onDisable?()` (optionnel, pour un nettoyage que le bot ne fait pas déjà tout
 seul).
 
+## Développement
+
+```bash
+pnpm install
+pnpm verify
+```
+
+`pnpm verify` enchaîne `typecheck`, `test` et `build`. Le dépôt n'utilise pas d'intégration
+continue : la vérification tourne en local, via un hook `pre-push` livré dans
+[`.githooks/`](.githooks/) et activé par le script `prepare` à chaque `pnpm install`.
+`git push --no-verify` passe outre. La même commande sert de `prepublishOnly`, donc une
+publication est toujours précédée de la suite complète.
+
+La publication, elle, reste automatisée : pousser un tag `v*` déclenche
+[`.github/workflows/release.yml`](.github/workflows/release.yml), qui publie sur npm avec
+provenance. Publier à la main fonctionne aussi, mais le paquet ne porte alors aucune attestation
+de build vérifiable.
+
 ## Licence
 
 MIT — voir [`LICENSE`](LICENSE).
