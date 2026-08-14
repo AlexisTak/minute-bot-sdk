@@ -1,0 +1,17 @@
+#!/bin/sh
+# Runs the same checks a CI job would, just before the push leaves the machine.
+#
+# Enabled by `git config core.hooksPath .githooks`, which the `prepare` script
+# sets on every install — so cloning and running `pnpm install` is all it takes.
+#
+# To push past a failure (a work-in-progress branch, a known-broken test):
+#
+#     git push --no-verify
+#
+echo "pre-push: pnpm verify"
+pnpm verify || {
+  echo ""
+  echo "pre-push: verification failed, push aborted."
+  echo "pre-push: use 'git push --no-verify' to push anyway."
+  exit 1
+}
