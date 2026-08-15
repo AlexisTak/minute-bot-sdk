@@ -4,7 +4,7 @@ Le format suit [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), et le v
 [semver](https://semver.org/lang/fr/). Tant que la version majeure est `0`, une rupture de contrat
 incrémente la version mineure.
 
-## [0.2.0] — non publié
+## [0.2.0] — 2026-08-14
 
 ### Rupture de compatibilité
 

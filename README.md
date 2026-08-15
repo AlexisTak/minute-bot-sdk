@@ -4,10 +4,15 @@ Le contrat public pour écrire un plugin [Minute Bot](https://github.com/AlexisT
 la classe `Plugin`, le `PluginContext` transmis à ses hooks, et le schéma du manifeste
 `plugin.json`.
 
+> **Statut : pré-1.0.** Tant que la version majeure est `0`, une rupture de compatibilité
+> incrémente la version mineure (voir [`CHANGELOG.md`](CHANGELOG.md)) — `0.2.0` a par exemple cassé
+> le contrat de `0.1.x`. Épinglez une version mineure exacte (`~0.2.0`, pas `^0.2.0`) tant que le
+> paquet n'a pas atteint `1.0.0`.
+
 ## Installation
 
 ```bash
-npm install @la_minute_code/sdk discord.js
+npm install @la_minute_code/sdk@~0.2.0 discord.js
 ```
 
 `discord.js` est une dépendance paire (`peerDependency`) — installez-la vous-même, ce SDK ne
@@ -79,11 +84,13 @@ pnpm install
 pnpm verify
 ```
 
-`pnpm verify` enchaîne `typecheck`, `test` et `build`. Le dépôt n'utilise pas d'intégration
-continue : la vérification tourne en local, via un hook `pre-push` livré dans
-[`.githooks/`](.githooks/) et activé par le script `prepare` à chaque `pnpm install`.
-`git push --no-verify` passe outre. La même commande sert de `prepublishOnly`, donc une
-publication est toujours précédée de la suite complète.
+`pnpm verify` enchaîne `typecheck`, `test` et `build`. Elle tourne à trois moments : en local
+avant chaque push (hook `pre-push` livré dans [`.githooks/`](.githooks/), activé par le script
+`prepare` à chaque `pnpm install` — `git push --no-verify` passe outre) ; sur GitHub Actions à
+chaque push sur `main` et sur chaque pull request
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)), ce qui couvre les contributions
+externes que le hook local ne voit jamais ; et comme `prepublishOnly`, donc une publication est
+toujours précédée de la suite complète.
 
 La publication, elle, reste automatisée : pousser un tag `v*` déclenche
 [`.github/workflows/release.yml`](.github/workflows/release.yml), qui publie sur npm avec
